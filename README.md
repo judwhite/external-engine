@@ -1,37 +1,36 @@
-External engine (alpha 2)
-=========================
+# Lichess External Engine
 
-Using engines running outside of the browser for
+Use an engine outside of the browser for
 [analysis on lichess.org](https://lichess.org/analysis).
 
-Example provider
-----------------
+Local Stockfish, Stockfish on your friend's computer, other UCI engines maybe, etc.
 
-1. Create a token at https://lichess.org/account/oauth/token/create?scopes[]=engine:read&scopes[]=engine:write
+API: https://lichess.org/api#tag/External-engine.
+
+## Quick start
+
+1. Create a token at https://lichess.org/account/oauth/token/create?scopes[]=engine:read&scopes[]=engine:write.
 
 2. Run:
 
    ```
-   LICHESS_API_TOKEN=lip_*** python3 example-provider.py --engine /usr/bin/stockfish
+   go build && LICHESS_API_TOKEN=lip_*** ./external-engine --engine /usr/bin/stockfish
    ```
 
-3. Visit https://lichess.org/analysis
+3. Visit https://lichess.org/analysis.
 
-4. Open the hamburger menu and select the *Alpha 2* provider
+4. Open the ~~hamburger~~ gear menu (⚙️) in the top right and select **External Stockfish** or **External Engine**
+   from the list of engines.
 
-Official provider
------------------
+## What the fork?
 
-An official (more user-friendly) provider is under development.
+This is a fork of https://github.com/lichess-org/external-engine, a great tool I've used for years (including alpha 1).
+Big ups to Lichess for even making this possible.
 
-Will provide Stockfish 15 for 64-bit x86 platforms, built with profile-guided
-optimization, automatically selecting the best available binary for your CPU.
+This version aims to handle network hiccups better and let you flip through a game like a maniac with the engine on,
+no problem.
 
-Third party clients and providers
----------------------------------
-
-> :wrench: :hammer: The protocol is subject to change.
-> Please make an issue or [get in contact](https://discord.gg/lichess) to discuss.
-
-Lichess provides an
-[HTTP API for third-party clients and providers](https://lichess.org/api#tag/External-engine).
+I had times when no lines would show up in the analysis box, usually after some frantic piece movements and throwing
+a lot of "start, stop, no wait, change to this position" at it. The original script doesn't wait for the output
+to finish for a given position (you can receive `info` and `bestmove` after you send `stop`!), so some crossing of
+streams could happen which made it look like random missing data. Anyway, that should be fixed, hopefully.
